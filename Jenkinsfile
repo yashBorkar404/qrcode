@@ -6,10 +6,10 @@ pipeline {
     }
 
     environment {
-        SONARQUBE_ENV = 'SonarQube-server' 
-        SONARQUBE_TOKEN = credentials('sonar') // Jenkins credential ID for SonarQube token
-        GITHUB_TOKEN = credentials('github-token')   // Jenkins credential ID for GitHub PAT
-        VERCEL_TOKEN = credentials('vercel-token')   // Jenkins credential ID for Vercel token
+        SONARQUBE_ENV = 'SonarQube-server'
+        SONARQUBE_TOKEN = credentials('sonar')         // Jenkins credential ID for SonarQube token
+        GITHUB_TOKEN = credentials('github-token')     // Jenkins credential ID for GitHub PAT
+        VERCEL_TOKEN = credentials('vercel-token')     // Jenkins credential ID for Vercel token
     }
 
     stages {
@@ -24,13 +24,13 @@ pipeline {
                 sh 'npm install --legacy-peer-deps'
             }
         }
-        
+
         stage('Run tests') {
             steps {
                 sh 'npm test'
             }
         }
-        
+
         stage('Lint') {
             steps {
                 sh 'npm run lint'
@@ -48,11 +48,11 @@ pipeline {
             steps {
                 withSonarQubeEnv(SONARQUBE_ENV) {
                     sh """
-                      npx sonar-scanner \
-                      -Dsonar.projectKey=qrcode \
-                      -Dsonar.sources=. \
-                      -Dsonar.host.url=http://172.18.0.1:9000 \
-                      -Dsonar.login=$SONARQUBE_TOKEN
+                        npx sonar-scanner \
+                        -Dsonar.projectKey=qrcode \
+                        -Dsonar.sources=. \
+                        -Dsonar.host.url=http://172.18.0.1:9000 \
+                        -Dsonar.login=$SONARQUBE_TOKEN
                     """
                 }
             }
@@ -71,34 +71,16 @@ pipeline {
                 sh '''
                     mkdir -p reports
                     docker run --rm \
-                      -v $(pwd):/src \
-                      -v $(pwd)/reports:/report \
-                      owasp/dependency-check \
-                      --project "qrcode" \
-                      --scan /src \
-                      --format ALL \
-                      --out /report
+                        -v $(pwd):/src \
+                        -v $(pwd)/reports:/report \
+                        owasp/dependency-check \
+                        --project "qrcode" \
+                        --scan /src \
+                        --format ALL \
+                        --out /report
                 '''
             }
         }
-
-        post {
-            always {
-                script {
-                    def reportDir = 'reports/dependency-check-report'
-                    if (fileExists("${reportDir}/dependency-check-report.html")) {
-                        publishHTML([
-                            reportDir: "${reportDir}",
-                            reportFiles: 'dependency-check-report.html',
-                            reportName: 'OWASP Dependency Check Report'
-                        ])
-                    } else {
-                        echo "Report not generated. Skipping publishHTML."
-                    }
-                }
-            }
-        }
-
 
         stage('Containerize') {
             steps {
@@ -109,13 +91,27 @@ pipeline {
         stage('Deploy to Vercel') {
             steps {
                 sh """
-                npx vercel --prod --token $VERCEL_TOKEN
+                    npx vercel --prod --token $VERCEL_TOKEN
                 """
             }
         }
     }
-    
+
     post {
+        always {
+            script {
+                def reportDir = 'reports/dependency-check-report'
+                if (fileExists("${reportDir}/dependency-check-report.html")) {
+                    publishHTML([
+                        reportDir: "${reportDir}",
+                        reportFiles: 'dependency-check-report.html',
+                        reportName: 'OWASP Dependency Check Report'
+                    ])
+                } else {
+                    echo "Report not generated. Skipping publishHTML."
+                }
+            }
+        }
         failure {
             mail to: 'you@example.com',
                  subject: "Build failed in Jenkins: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
