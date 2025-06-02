@@ -68,24 +68,37 @@ pipeline {
 
         stage('Dependency Vulnerability Check') {
             steps {
-                // Using OWASP Dependency Check CLI, assuming docker or installed locally
                 sh '''
-                dependency-check.sh --project "qrcode" --scan . --format "ALL" --out reports/dependency-check-report
+                    mkdir -p reports
+                    docker run --rm \
+                      -v $(pwd):/src \
+                      -v $(pwd)/reports:/report \
+                      owasp/dependency-check \
+                      --project "qrcode" \
+                      --scan /src \
+                      --format ALL \
+                      --out /report
                 '''
             }
+        }
+
             post {
                 always {
-                    publishHTML([
-                      allowMissing: true,
-                      alwaysLinkToLastBuild: true,
-                      keepAll: true,
-                      reportDir: 'reports/dependency-check-report',
-                      reportFiles: 'dependency-check-report.html',
-                      reportName: 'OWASP Dependency Check Report'
-                    ])
-                }
+                    script {
+                        def reportDir = 'reports/dependency-check-report'
+                        if (fileExists("${reportDir}/dependency-check-report.html")) {
+                            publishHTML([
+                                reportDir: "${reportDir}",
+                                reportFiles: 'dependency-check-report.html',
+                                reportName: 'OWASP Dependency Check Report'
+                            ])
+                        } else {
+                            echo "Report not generated. Skipping publishHTML."
             }
         }
+    }
+}
+
 
         stage('Containerize') {
             steps {
