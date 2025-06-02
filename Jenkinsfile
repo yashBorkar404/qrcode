@@ -68,28 +68,18 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-                sh 'mkdir -p reports'
-                
-                dependencyCheck additionalArguments: '''
-                    --scan ./
-                    --out ./reports/dependency-check-report
-                    --format ALL
-                    --prettyPrint
-                ''', odcInstallation: 'OWASP-DepCheck-10'
+                sh '''
+                    mkdir -p reports/dependency-check-report
+                    dependency-check --data ~/.dependency-check-data \
+                        --project "qrcode" \
+                        --scan . \
+                        --format HTML \
+                        --out ./reports/dependency-check-report
+                '''
             }
         }
-        stage('Publish Dependency Check Report') {
-            steps {
-                publishHTML(target: [
-                    allowMissing: false,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'reports/dependency-check-report',
-                    reportFiles: 'dependency-check-report.html',
-                    reportName: 'OWASP Dependency Check Report'
-                ])
-            }
-        }
+
+  
 
 
         stage('Deploy to Vercel') {
