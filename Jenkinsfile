@@ -82,22 +82,22 @@ pipeline {
             }
         }
 
-            post {
-                always {
-                    script {
-                        def reportDir = 'reports/dependency-check-report'
-                        if (fileExists("${reportDir}/dependency-check-report.html")) {
-                            publishHTML([
-                                reportDir: "${reportDir}",
-                                reportFiles: 'dependency-check-report.html',
-                                reportName: 'OWASP Dependency Check Report'
-                            ])
-                        } else {
-                            echo "Report not generated. Skipping publishHTML."
+        post {
+            always {
+                script {
+                    def reportDir = 'reports/dependency-check-report'
+                    if (fileExists("${reportDir}/dependency-check-report.html")) {
+                        publishHTML([
+                            reportDir: "${reportDir}",
+                            reportFiles: 'dependency-check-report.html',
+                            reportName: 'OWASP Dependency Check Report'
+                        ])
+                    } else {
+                        echo "Report not generated. Skipping publishHTML."
+                    }
+                }
             }
         }
-    }
-}
 
 
         stage('Containerize') {
