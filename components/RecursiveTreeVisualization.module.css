@@ -1,0 +1,22 @@
+.node__root,
+.node__branch,
+.node__leaf {
+  fill: hsl(var(--node-bg));
+  stroke: hsl(var(--node-border));
+  stroke-width: 2;
+}
+
+.node__root circle,
+.node__branch circle,
+.node__leaf circle {
+  fill: hsl(var(--node-bg));
+  stroke: hsl(var(--node-border));
+  stroke-width: 2;
+}
+
+.node__root text,
+.node__branch text,
+.node__leaf text {
+  fill: hsl(var(--node-text));
+  font-size: 12px;
+}
