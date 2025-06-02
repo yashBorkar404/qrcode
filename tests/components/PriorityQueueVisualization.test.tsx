@@ -34,7 +34,7 @@ describe("PriorityQueueVisualization", () => {
     expect(screen.getByText("task1")).toBeInTheDocument()
     expect(screen.getByText("5")).toBeInTheDocument()
     expect(itemInput).toHaveValue("")
-    expect(priorityInput).toHaveValue("")
+    expect(priorityInput).toHaveValue(null)
   })
 
   test("maintains priority order", () => {

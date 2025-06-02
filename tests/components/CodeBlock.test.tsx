@@ -4,14 +4,11 @@ import CodeBlock from "@/components/CodeBlock"
 
 // Mock react-syntax-highlighter
 jest.mock("react-syntax-highlighter", () => ({
-  Prism: {
-    __esModule: true,
-    default: ({ children, ...props }: any) => (
-      <pre data-testid="syntax-highlighter" {...props}>
-        <code>{children}</code>
-      </pre>
-    ),
-  },
+  Prism: ({ children, language, style, showLineNumbers, ...props }: any) => (
+    <pre data-testid="syntax-highlighter" language={language} {...props}>
+      <code>{children}</code>
+    </pre>
+  ),
 }))
 
 jest.mock("react-syntax-highlighter/dist/esm/styles/prism", () => ({

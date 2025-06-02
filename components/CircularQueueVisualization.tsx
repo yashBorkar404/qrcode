@@ -19,14 +19,16 @@ export default function CircularQueueVisualization() {
         alert("Queue is full!");
         return;
       }
+      const newQueue = [...queue];
       if (front === -1) {
         setFront(0);
         setRear(0);
+        newQueue[0] = inputValue.trim();
       } else {
-        setRear((rear + 1) % queue.length);
+        const newRear = (rear + 1) % queue.length;
+        setRear(newRear);
+        newQueue[newRear] = inputValue.trim();
       }
-      const newQueue = [...queue];
-      newQueue[rear] = inputValue.trim();
       setQueue(newQueue);
       setInputValue("");
     }
