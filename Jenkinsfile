@@ -29,11 +29,7 @@ pipeline {
             steps {
                 sh 'npm test'
             }
-            post {
-                always {
-                    junit '**/test-results/*.xml'  // Adjust path if Jest outputs to a different dir
-                }
-            }
+            
         }
 
         stage('Lint') {
