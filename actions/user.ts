@@ -1,6 +1,7 @@
 "use server";
 
-import { auth } from "@/lib/auth";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
 
 export interface User {
   id: string;
@@ -30,7 +31,7 @@ export const setUserScore = async (
   topic: "queue" | "recursion",
   score: number,
 ) => {
-  const session = await auth();
+  const session = await getServerSession(authOptions);
   const userId = session?.user?.id;
   if (!userId) {
     throw new Error("User not found");

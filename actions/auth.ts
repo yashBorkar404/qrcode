@@ -1,15 +1,14 @@
 "use server";
 
-import { signIn, signOut } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 type Provider = "github";
 
 export const login = async (provider: Provider) => {
-  await signIn(provider, { redirectTo: "/auth/callback" });
+  redirect(`/api/auth/signin/${provider}?callbackUrl=/auth/callback`);
 };
 
 export const logout = async () => {
-  await signOut();
-  revalidatePath("/");
+  redirect("/api/auth/signout");
 };
