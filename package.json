@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "test": "jest",
-    "export": "next export"
+    
   },
   "dependencies": {
     "@auth/core": "latest",
