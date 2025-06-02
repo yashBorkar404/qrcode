@@ -66,29 +66,29 @@ pipeline {
             }
         }
 
-        stage('Dependency Vulnerability Check') {
+        stage('OWASP Dependency Check') {
             steps {
-                sh '''
-                    unset DOCKER_TLS_VERIFY
-                    unset DOCKER_CERT_PATH
-                    mkdir -p reports
-                    docker run --rm \
-                        -v $(pwd):/src \
-                        -v $(pwd)/reports:/report \
-                        owasp/dependency-check \
-                        --project "qrcode" \
-                        --scan /src \
-                        --format ALL \
-                        --out /report
-                '''
+                dependencyCheck additionalArguments: '''
+                    --scan ./
+                    --out ./reports/dependency-check-report
+                    --format ALL
+                    --prettyPrint
+                ''', odcInstallation: 'OWASP-DepCheck-10'
+            }
+        }
+        stage('Publish Dependency Check Report') {
+            steps {
+                publishHTML(target: [
+                    allowMissing: false,
+                    alwaysLinkToLastBuild: true,
+                    keepAll: true,
+                    reportDir: 'reports/dependency-check-report',
+                    reportFiles: 'dependency-check-report.html',
+                    reportName: 'OWASP Dependency Check Report'
+                ])
             }
         }
 
-        stage('Containerize') {
-            steps {
-                sh 'docker build -t qrcode:latest .'
-            }
-        }
 
         stage('Deploy to Vercel') {
             steps {
