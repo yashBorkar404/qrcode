@@ -40,7 +40,7 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'npm run build'
-                sh 'npm run export'  // If you use `next export` to generate static site
+                // sh 'npm run export'  // If you use `next export` to generate static site
             }
         }
 
