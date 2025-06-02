@@ -68,7 +68,8 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-                mkdir -p reports
+                sh 'mkdir -p reports'
+                
                 dependencyCheck additionalArguments: '''
                     --scan ./
                     --out ./reports/dependency-check-report
