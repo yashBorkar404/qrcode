@@ -69,6 +69,8 @@ pipeline {
         stage('Dependency Vulnerability Check') {
             steps {
                 sh '''
+                    unset DOCKER_TLS_VERIFY
+                    unset DOCKER_CERT_PATH
                     mkdir -p reports
                     docker run --rm \
                         -v $(pwd):/src \
