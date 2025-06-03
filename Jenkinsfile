@@ -98,21 +98,20 @@ pipeline {
         }
 
         stage('Link and Deploy to Vercel') {
-        steps {
-            sh 'rm -rf .vercel'
-            sh 'npx vercel link --project qrcode --yes --token $VERCEL_TOKEN'
-            script {
-                try {
-                    sh 'npx vercel --prod --yes --token $VERCEL_TOKEN'
-                } catch (err) {
-                    echo "Vercel deployment failed, but pipeline will continue: ${err.getMessage()}"
-                    // This line ensures the pipeline is marked as SUCCESS
-                    currentBuild.result = 'SUCCESS'
+            steps {
+                sh 'rm -rf .vercel'
+                sh 'npx vercel link --project qrcode --yes --token $VERCEL_TOKEN'
+                script {
+                    try {
+                        sh 'npx vercel --prod --yes --token $VERCEL_TOKEN'
+                    } catch (err) {
+                        echo "Vercel deployment failed, but pipeline will continue: ${err.getMessage()}"
+                        currentBuild.result = 'SUCCESS'
+                    }
                 }
             }
         }
     }
-
 
     post {
         always {
