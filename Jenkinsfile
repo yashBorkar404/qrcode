@@ -98,10 +98,9 @@ pipeline {
 
         stage('Link and Deploy to Vercel') {
             steps {
-                sh """
-                    npx vercel link --yes --token $VERCEL_TOKEN
-                    npx vercel --prod --yes --token $VERCEL_TOKEN
-                """
+                sh 'rm -rf .vercel'
+                sh 'npx vercel link --yes --token $VERCEL_TOKEN'
+                sh 'npx vercel --prod --yes --token $VERCEL_TOKEN'
             }
         }
     }
