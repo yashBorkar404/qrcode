@@ -74,6 +74,7 @@ pipeline {
                     --format HTML 
                     --out reports/dependency-check-report
                     --nvdApiKey $NVD_API_KEY
+                    --nvdDelay 8000
                 """, odcInstallation: 'owasp'
             }
         }
