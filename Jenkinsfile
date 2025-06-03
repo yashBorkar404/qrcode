@@ -68,13 +68,14 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-                dependencyCheck additionalArguments: '''
+                dependencyCheck additionalArguments: """
                     --scan . 
                     --format HTML 
                     --out reports/dependency-check-report
-                ''', odcInstallation: 'owasp'
+                """, odcInstallation: 'owasp'
             }
         }
+
         stage('Publish OWASP Dependency Check Report') {
             steps {
                 script {
@@ -91,14 +92,12 @@ pipeline {
                     }
                 }
             }
-  
-
+        }
 
         stage('Deploy to Vercel') {
             steps {
                 sh """
                     npx vercel --prod --yes --token $VERCEL_TOKEN
-
                 """
             }
         }
