@@ -100,7 +100,7 @@ pipeline {
         stage('Link and Deploy to Vercel') {
             steps {
                 sh 'rm -rf .vercel'
-                sh 'npx vercel link --yes --token $VERCEL_TOKEN'
+                sh 'npx vercel link --project qrcode --yes --token $VERCEL_TOKEN'
                 sh 'npx vercel --prod --yes --token $VERCEL_TOKEN'
             }
         }
