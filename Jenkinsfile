@@ -9,7 +9,8 @@ pipeline {
         SONARQUBE_ENV = 'SonarQube-server'
         SONARQUBE_TOKEN = credentials('sonar')         // Jenkins credential ID for SonarQube token
         GITHUB_TOKEN = credentials('github-token')     // Jenkins credential ID for GitHub PAT
-        VERCEL_TOKEN = credentials('vercel-token')     // Jenkins credential ID for Vercel token
+        VERCEL_TOKEN = credentials('vercel-token') 
+        NVD_API_KEY = credentials('nvd_api_key')    
     }
 
     stages {
@@ -72,6 +73,7 @@ pipeline {
                     --scan . 
                     --format HTML 
                     --out reports/dependency-check-report
+                    --nvdApiKey $NVD_API_KEY
                 """, odcInstallation: 'owasp'
             }
         }
