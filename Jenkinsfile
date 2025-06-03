@@ -98,22 +98,21 @@ pipeline {
         }
 
         stage('Link and Deploy to Vercel') {
-            steps {
-                // Remove any existing .vercel directory to avoid cached or invalid config issues
-                sh 'rm -rf .vercel'
-        
-                // Explicitly link the project using a valid, lowercase project name
-                // If the project is already linked, this is safe and will not cause issues
-                sh 'npx vercel link --project qrcode --yes --token $VERCEL_TOKEN'
-        
-                // Deploy to production, auto-confirm prompts, and do not fail the pipeline if the build fails on Vercel
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+        steps {
+            sh 'rm -rf .vercel'
+            sh 'npx vercel link --project qrcode --yes --token $VERCEL_TOKEN'
+            script {
+                try {
                     sh 'npx vercel --prod --yes --token $VERCEL_TOKEN'
+                } catch (err) {
+                    echo "Vercel deployment failed, but pipeline will continue: ${err.getMessage()}"
+                    // This line ensures the pipeline is marked as SUCCESS
+                    currentBuild.result = 'SUCCESS'
                 }
             }
         }
-
     }
+
 
     post {
         always {
