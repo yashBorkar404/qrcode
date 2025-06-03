@@ -68,17 +68,29 @@ pipeline {
 
         stage('OWASP Dependency Check') {
             steps {
-                sh '''
-                    mkdir -p reports/dependency-check-report
-                    dependency-check --data ~/.dependency-check-data \
-                        --project "qrcode" \
-                        --scan . \
-                        --format HTML \
-                        --out ./reports/dependency-check-report
-                '''
+                dependencyCheck additionalArguments: '''
+                    --scan . 
+                    --format HTML 
+                    --out reports/dependency-check-report
+                ''', odcInstallation: 'owasp'
             }
         }
-
+        stage('Publish OWASP Dependency Check Report') {
+            steps {
+                script {
+                    def reportFile = 'reports/dependency-check-report/dependency-check-report.html'
+                    sh 'ls -l reports/dependency-check-report || true'
+                    if (fileExists(reportFile)) {
+                        publishHTML([
+                            reportDir: 'reports/dependency-check-report',
+                            reportFiles: 'dependency-check-report.html',
+                            reportName: 'OWASP Dependency Check Report'
+                        ])
+                    } else {
+                        echo "Dependency-Check HTML report not found. Skipping publishHTML."
+                    }
+                }
+            }
   
 
 
