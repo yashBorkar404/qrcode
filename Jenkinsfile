@@ -77,9 +77,7 @@ pipeline {
                     // Install Vercel CLI if not already installed
                     sh 'npm install -g vercel'
 
-                    // Use Jenkins credentials to authenticate with Vercel
-                    withCredentials([string(credentialsId: 'VERCEL_TOKEN', variable: 'VERCEL_TOKEN')]) {
-                          sh 'vercel --token=$VERCEL_TOKEN --prod'
+                    sh 'vercel --prod --confirm --token $VERCEL_TOKEN'
                     }
 
                 }
