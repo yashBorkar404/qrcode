@@ -80,7 +80,7 @@ pipeline {
                     // Use Jenkins credentials to authenticate with Vercel
                      withCredentials([string(credentialsId: 'VERCEL_TOKEN', variable: 'VERCEL_TOKEN')]) {
                         // Deploy to production environment without prompts
-                        sh 'vercel --prod --confirm --token $VERCEL_TOKEN'
+                        sh " vercel --prod --confirm --token $VERCEL_TOKEN "
                     }
                 }
              }
