@@ -77,7 +77,7 @@ pipeline {
                     // Install Vercel CLI if not already installed
                     sh 'npm install -g vercel'
 
-                    sh 'vercel --prod --confirm --token $VERCEL_TOKEN --project qrcode-zzxp'
+                    sh 'vercel --prod --confirm --token $VERCEL_TOKEN'
                     
 
                 }
