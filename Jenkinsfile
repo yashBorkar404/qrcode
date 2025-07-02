@@ -7,6 +7,9 @@ pipeline {
 
     environment {
         SONARQUBE_ENV = 'SonarQube-server'
+        DOCKERHUB_USER = 'ykb1098'
+        DOCKERHUB_PASS = 'ykb@docker25'
+        
         SONARQUBE_TOKEN = credentials('sonar')         // Jenkins credential ID for SonarQube token
         GITHUB_TOKEN = credentials('github-token')     // Jenkins credential ID for GitHub PAT
         VERCEL_TOKEN = credentials('vercel-token') 
@@ -70,6 +73,21 @@ pipeline {
                 }
             }
         }
+        stage('Docker Build & Push') {
+              steps {
+                script {
+                  // Build Docker image
+                  sh 'docker build -t ykb1098/qrcode:latest .'
+                  
+                  // (Optional) Login to Docker registry
+                  sh 'echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin'
+                  
+                  // Push Docker image to Docker Hub or your registry
+                  sh 'docker push ykb1098/qrcode:latest'
+                }
+              }
+            }
+
 
         stage('Deploy to Vercel') {
             steps {
