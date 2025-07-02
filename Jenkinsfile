@@ -78,20 +78,7 @@ pipeline {
             }
         }
 
-         stage('Docker Build & Push') {
-            steps {
-                script {
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub', usernameVariable: 'DOCKERHUB_USER', passwordVariable: 'DOCKERHUB_PASS')]) {
-                        sh '''
-                            echo $DOCKERHUB_PASS | docker login -u $DOCKERHUB_USER --password-stdin
-                            docker build -t $DOCKERHUB_USER/qrcode:latest .
-                            docker push $DOCKERHUB_USER/qrcode:latest
-                            docker logout
-                        '''
-                    }
-                }
-            }
-         }
+
         stage('Deploy to Vercel') {
             steps {
                 script {
