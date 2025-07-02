@@ -48,13 +48,13 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 withSonarQubeEnv(SONARQUBE_ENV) {
-                    sh """
+                    sh '''
                         npx sonar-scanner \
                         -Dsonar.projectKey=qrcode \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://172.18.0.1:9000 \
                         -Dsonar.login=$SONARQUBE_TOKEN
-                    """
+                    '''
                 }
             }
         }
