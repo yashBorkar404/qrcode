@@ -67,18 +67,20 @@ pipeline {
             }
         }
 
-        stage('Link and Deploy to Vercel') {
+        stage('Deploy to Vercel') {
             steps {
-                // Simulate a real Vercel deployment output
-                echo 'Deploying yashkb1004-gmailcoms-projects/qrcode'
-                echo 'Uploading [--------------------] (0.0B/4.6KB)'
-                sh 'sleep 1'
-                echo 'Uploading [====================] (4.6KB/4.6KB)'
-                sh 'sleep 1'
-                echo 'Inspect: https://vercel.com/yashkb1004-gmailcoms-projects/qrcode/4G5qho5SPsxqBAD1tx57bxdGB1pj [2s]'
-                echo 'Production: https://qrcode-8pxm6cunu-yashkb1004-gmailcoms-projects.vercel.app [2s]'
-                echo 'https://qrcode-8pxm6cunu-yashkb1004-gmailcoms-projects.vercel.appQueued'
-            }
+                script {
+                    // Install Vercel CLI if not already installed
+                    sh 'npm install -g vercel'
+
+                    // Use Jenkins credentials to authenticate with Vercel
+                     withCredentials([string(credentialsId: 'VERCEL_TOKEN', variable: 'VERCEL_TOKEN')]) {
+                        // Deploy to production environment without prompts
+                        sh 'vercel --prod --confirm --token $VERCEL_TOKEN'
+                    }
+                }
+             }
         }
+
     }
 }
