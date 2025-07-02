@@ -78,10 +78,10 @@ pipeline {
                     sh 'npm install -g vercel'
 
                     // Use Jenkins credentials to authenticate with Vercel
-                     withCredentials([string(credentialsId: 'VERCEL_TOKEN', variable: 'VERCEL_TOKEN')]) {
-                        // Deploy to production environment without prompts
-                        sh " vercel --prod --confirm --token $VERCEL_TOKEN "
+                    withCredentials([string(credentialsId: 'VERCEL_TOKEN', variable: 'VERCEL_TOKEN')]) {
+                          sh 'vercel --token=$VERCEL_TOKEN --prod'
                     }
+
                 }
              }
         }
