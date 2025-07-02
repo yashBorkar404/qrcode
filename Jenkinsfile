@@ -52,7 +52,7 @@ pipeline {
                         npx sonar-scanner \
                         -Dsonar.projectKey=qrcode \
                         -Dsonar.sources=. \
-                        -Dsonar.host.url=http://172.18.0.1:9000 \
+                        -Dsonar.host.url=http://172.19.0.1:9000 \
                         -Dsonar.token=${SONARQUBE_TOKEN}
                     """
         }
