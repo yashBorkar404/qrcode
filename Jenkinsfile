@@ -71,15 +71,13 @@ pipeline {
                 }
             }
         }
+        
         stage('OWASP Dependency Check') {
-            steps {
-                sh '''
-                /opt/dependency-check/bin/dependency-check.sh \
-                  --project qrcode \
-                  --scan ./ \
-                  --format HTML \
-                  --out reports/ \
-                  --data /opt/dependency-check/data
+          steps {
+            sh '/opt/dependency-check/bin/dependency-check.sh --project qrcode --scan ./ --format JSON --out reports/'
+          }
+        }
+
                 '''
             }
         }
