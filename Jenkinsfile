@@ -78,7 +78,7 @@ pipeline {
                     sh 'npm install -g vercel'
 
                     sh 'vercel --prod --confirm --token $VERCEL_TOKEN'
-                    }
+                    
 
                 }
              }
