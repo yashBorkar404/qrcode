@@ -53,8 +53,11 @@ pipeline {
                         -Dsonar.projectKey=qrcode \
                         -Dsonar.sources=. \
                         -Dsonar.host.url=http://172.19.0.1:9000 \
-                        -Dsonar.token=${SONARQUBE_TOKEN}
+                        -Dsonar.login=$SONARQUBE_TOKEN \
+                        -Dsonar.sourceEncoding=UTF-8 \
+                        -Dsonar.exclusions=node_modules/**,**/*.html
                     """
+
         }
     }
 }
